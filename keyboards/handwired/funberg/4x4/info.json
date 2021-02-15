@@ -1,0 +1,30 @@
+{
+  "keyboard_name": "handwired/funberg/4x4",
+  "url": "",
+  "maintainer": "funberg",
+  "width": 4,
+  "height": 4,
+  "layouts": {
+    "LAYOUT": {
+      "key_count": 16,
+      "layout": [
+        {"label":"Reset", "x":0, "y":0},
+        {"label":"Home", "x":1, "y":0},
+        {"label":"Up", "x":2, "y":0},
+        {"label":"End", "x":3, "y":0},
+        {"label":"PgUp", "x":0, "y":1},
+        {"label":"Left", "x":1, "y":1},
+        {"label":"Down", "x":2, "y":1},
+        {"label":"Right", "x":3, "y":1},
+        {"label":"PgDown", "x":0, "y":2},
+        {"label":"Backspace", "x":1, "y":2},
+        {"label":"Space", "x":2, "y":2},
+        {"label":"Enter", "x":3, "y":2},
+        {"label":"Shift", "x":0, "y":3},
+        {"label":"Control", "x":1, "y":3},
+        {"label":"Alt", "x":2, "y":3},
+        {"label":"Gui", "x":3, "y":3}
+      ]
+    }
+  }
+}
