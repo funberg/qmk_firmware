@@ -40,8 +40,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ONBOARD_ROW_PINS { D4, C6, D7, E6 }
 
 
-#define EXPANDER_COL_REGISTER GPIOA
-#define EXPANDER_ROW_REGISTER GPIOB
+#define EXPANDER_COL_REGISTER GPIOB
+#define EXPANDER_ROW_REGISTER GPIOA
 #define MATRIX_EXPANDER_COL_PINS {0, 1, 2, 3, 4, 5}
 #define MATRIX_EXPANDER_ROW_PINS {0, 1, 2, 3}
 
