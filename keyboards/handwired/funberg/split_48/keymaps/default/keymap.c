@@ -4,19 +4,19 @@
 
 
 enum custom_keycodes {
-	KC__SCLN= SAFE_RANGE,
-	KC__QUOT,
-	KC__COMM,
-  KC__DOT,
-  KC__SLSH
+    KC__SCLN= SAFE_RANGE,
+    KC__QUOT,
+    KC__COMM,
+    KC__DOT,
+    KC__SLSH
 };
 
 enum planck_layers {
-  _BASE,
-  _LOWER,
-  _RAISE,
-  _ADJUST,
-  _LAYER4,
+    _BASE,
+    _LOWER,
+    _RAISE,
+    _ADJUST,
+    _LAYER4,
 };
 
 #define LOWER MO(_LOWER)
@@ -64,112 +64,83 @@ KC_LSHIFT ,_______   ,_______   ,_______   ,_______   ,_______                  
 // )
 };
 
-
-
-static bool shift_held = false;
+// Make BASE layer special characters behave like the US-layout one instead of swedish ones
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-	switch(keycode) {
-	case KC_LSFT:
-	case KC_RSFT:
-		shift_held = record->event.pressed;
-		return true;
-		break;
-  case KC__SCLN: {
-			if (record->event.pressed) {
-				if (shift_held) {
-          register_code(KC_LSFT);
-          register_code(SE_DOT);
-				} else {
-          register_code(KC_LSFT);
-					register_code(SE_COMM);
-				}
-			} else { // Release the key
-				if (shift_held) {
-          unregister_code(SE_DOT);
-				} else {
-          unregister_code(KC_LSFT);
-					unregister_code(SE_COMM);
-				}
-  			}
-			return false;
-			break;
-		}
-  case KC__COMM: {
-			if (record->event.pressed) {
-				if (shift_held) {
-          unregister_code(KC_LSFT);
-          register_code(SE_SECT);
-          register_code(KC_LSFT);
-				} else {
-          register_code(SE_COMM);
-				}
-			} else { // Release the key
-				if (shift_held) {
-          unregister_code(SE_SECT);
-				} else {
-					unregister_code(SE_COMM);
-				}
-  			}
-			return false;
-			break;
-		}	
-  case KC__DOT: {
-			if (record->event.pressed) {
-				if (shift_held) {
-          register_code(SE_SECT);
-				} else {
-          register_code(SE_DOT);
-				}
-			} else { // Release the key
-				if (shift_held) {
-          unregister_code(SE_SECT);
-				} else {
-					unregister_code(SE_DOT);
-				}
-  			}
-			return false;
-			break;
-		}	    
-  case KC__SLSH: {
-			if (record->event.pressed) {
-				if (shift_held) {
-          register_code(KC_LSFT);
-          register_code(SE_PLUS);
-				} else {
-          register_code(KC_LSFT);
-          register_code(SE_7);
-				}
-			} else { // Release the key
-				if (shift_held) {
-          unregister_code(SE_PLUS);
-				} else {
-          unregister_code(KC_LSFT);
-					unregister_code(SE_7);
-				}
-  			}
-			return false;
-			break;
-		}	     
-      case KC__QUOT: {
-			if (record->event.pressed) {
-				if (shift_held) {
-          register_code(KC_LSFT);
-          register_code(SE_2);
-				} else {
-          register_code(SE_QUOT);
-				}
-			} else { // Release the key
-				if (shift_held) {
-          unregister_code(SE_2);
-				} else {
-					unregister_code(SE_QUOT);
-				}
-  			}
-			return false;
-			break;
-		}	     
-
-    
+    static bool shift_held = false;
+    const bool primary_down = record->event.pressed && !shift_held, primary_up = !record->event.pressed && !shift_held;
+    const bool shifted_down = record->event.pressed && shift_held, shifted_up = !record->event.pressed && shift_held;
+    switch (keycode) {
+        case KC_LSFT:
+        case KC_RSFT:
+            shift_held = record->event.pressed;
+            return true;
+        case KC__SCLN: {
+            if (primary_down) {
+                register_code(KC_LSFT);
+                register_code(SE_COMM);
+            } else if (primary_up) {
+                unregister_code(KC_LSFT);
+                unregister_code(SE_COMM);
+            } else if (shifted_down) {
+                register_code(KC_LSFT);
+                register_code(SE_DOT);
+            } else if (shifted_up) {
+                unregister_code(SE_DOT);
+            }
+            return false;
+        }
+        case KC__COMM: {
+            if (primary_down) {
+                register_code(SE_COMM);
+            } else if (primary_up) {
+                unregister_code(SE_COMM);
+            } else if (shifted_down) {
+                unregister_code(KC_LSFT);
+                register_code(SE_SECT);
+            } else if (shifted_up) {
+                register_code(KC_LSFT);
+                unregister_code(SE_SECT);
+            }
+            return false;
+        }
+        case KC__DOT: {
+            if (primary_down) {
+                register_code(SE_DOT);
+            } else if (primary_up) {
+                unregister_code(SE_DOT);
+            } else if (shifted_down) {
+                register_code(SE_SECT);
+            } else if (shifted_up) {
+                unregister_code(SE_SECT);
+            }
+            return false;
+        }
+        case KC__SLSH: {
+            if (primary_down) {
+                register_code(KC_LSFT);
+                register_code(SE_7);
+            } else if (primary_up) {
+                unregister_code(KC_LSFT);
+                unregister_code(SE_7);
+            } else if (shifted_down) {
+                register_code(SE_PLUS);
+            } else if (shifted_up) {
+                unregister_code(SE_PLUS);
+            }
+            return false;
+        }
+        case KC__QUOT: {
+            if (primary_down) {
+                register_code(SE_QUOT);
+            } else if (primary_up) {
+                unregister_code(SE_QUOT);
+            } else if (shifted_down) {
+                register_code(SE_2);
+            } else if (shifted_up) {
+                unregister_code(SE_2);
+            }
+            return false;
+        }
     }
-	return true;
+    return true;
 };
