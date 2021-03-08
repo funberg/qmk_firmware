@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "i2cmaster.h"
 #include "timer.h"
 
+void init_expander(void);
 
 /* Set 0 if debouncing isn't needed */
 

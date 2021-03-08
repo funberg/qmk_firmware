@@ -66,5 +66,3 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define GPPUB           0x0D
 #define GPIOA           0x12            // general purpose i/o port register (write modifies OLAT)
 #define GPIOB           0x13
-
-void init_expander(void);
