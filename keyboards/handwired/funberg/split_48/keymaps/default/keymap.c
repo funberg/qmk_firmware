@@ -2,6 +2,7 @@
 #include "version.h"
 #include "keymap_swedish.h"
 
+#define RETRO_TAPPING
 
 enum custom_keycodes {
     KC__SCLN= SAFE_RANGE,
