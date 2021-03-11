@@ -9,7 +9,8 @@ enum custom_keycodes {
     KC__QUOT,
     KC__COMM,
     KC__DOT,
-    KC__SLSH
+    KC__SLSH,
+    KC__DEBUG
 };
 
 enum planck_layers {
@@ -52,7 +53,7 @@ _______      ,XXXXXXX      ,XXXXXXX      ,SE_LBRC      ,SE_RBRC      ,XXXXXXX   
 ),
 [_ADJUST] = LAYOUT(
 RESET        ,_______      ,_______      ,_______      ,_______      ,_______                                                ,_______      ,_______      ,_______      ,_______      ,_______      ,KC_SYSTEM_SLEEP,
-_______      ,_______      ,_______      ,_______      ,_______      ,_______                                                ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,
+KC__DEBUG    ,_______      ,_______      ,_______      ,_______      ,_______                                                ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,
 _______      ,_______      ,_______      ,MUTE         ,VOL_DOWN     ,VOL_UP                                                 ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,
               _______      ,_______      ,_______      ,_______      ,_______      ,_______                    ,_______      ,_______      ,_______      ,_______      ,_______      ,_______
 ),
@@ -73,7 +74,7 @@ _______      ,_______      ,_______      ,_______      ,_______      ,_______   
 
 // Make BASE layer special characters behave like the US-layout one instead of swedish ones
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    static bool shift_held = false;
+    static bool shift_held = false, _debugging = false;
     const bool primary_down = record->event.pressed && !shift_held, primary_up = !record->event.pressed && !shift_held;
     const bool shifted_down = record->event.pressed && shift_held, shifted_up = !record->event.pressed && shift_held;
     switch (keycode) {
@@ -145,6 +146,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 register_code(SE_2);
             } else if (shifted_up) {
                 unregister_code(SE_2);
+            }
+            return false;
+        }
+        case KC__DEBUG: {
+            if(record->event.pressed) {
+                _debugging = !_debugging;
+                debug_enable = _debugging;
+                debug_matrix = _debugging;
             }
             return false;
         }
