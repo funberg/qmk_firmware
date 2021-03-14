@@ -165,6 +165,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     int layer = get_highest_layer(state);
-    uprintf("layer:%d/n", layer);
+    uprintf("layer:%d\n", layer);
     return state;
 }
