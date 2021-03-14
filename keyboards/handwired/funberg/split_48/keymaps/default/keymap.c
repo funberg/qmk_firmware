@@ -1,6 +1,7 @@
 #include QMK_KEYBOARD_H
 #include "version.h"
 #include "keymap_swedish.h"
+#include "print.h"
 
 #define RETRO_TAPPING
 
@@ -160,3 +161,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return true;
 };
+
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    int layer = get_highest_layer(state);
+    uprintf("layer:%d/n", layer);
+    return state;
+}
