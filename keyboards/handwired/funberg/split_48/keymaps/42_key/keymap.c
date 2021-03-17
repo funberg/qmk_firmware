@@ -26,19 +26,26 @@ enum planck_layers {
 #define FNUM MO(_FNUM)
 #define ADJUST MO(_ADJUST)
 #define ADJUST0 LT(_ADJUST, KC_0)
-#define NAV TT(_NAV)
+#define NAV MO(_NAV)
+#define SPC_CMD MT(MOD_LGUI, KC_SPC)
+#define NAV_SPC LT(_NAV, KC_SPC)
 
 #define CTL_TAB C(KC_F9)
 #define MUTE KC_AUDIO_MUTE
 #define VOL_UP KC_AUDIO_VOL_UP
 #define VOL_DOWN KC_AUDIO_VOL_DOWN
 
+#define BASE_ON DF(_BASE)
+#define NAV_ON  DF(_NAV)
+#define CODE_ON DF(_CODE)
+#define FNUM_ON DF(_FNUM)
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_BASE] = LAYOUT_42(
 KC_ESC       ,KC_Q         ,KC_W         ,KC_E         ,KC_R         ,KC_T                       ,KC_Y         ,KC_U         ,KC_I         ,KC_O         ,KC_P         ,KC_BSPC      ,
 KC_TAB       ,KC_A         ,KC_S         ,KC_D         ,KC_F         ,KC_G                       ,KC_H         ,KC_J         ,KC_K         ,KC_L         ,KC__SCLN     ,KC__QUOT     ,
 KC_LSFT      ,KC_Z         ,KC_X         ,KC_C         ,KC_V         ,KC_B                       ,KC_N         ,KC_M         ,KC__COMM     ,KC__DOT      ,KC__SLSH     ,KC_ENT       ,
-                                          KC_LGUI      ,FNUM        ,NAV                        ,KC_SPC       ,CODE        ,KC_LCTL
+                                          NAV          ,FNUM         ,SPC_CMD                    ,NAV_SPC      ,CODE         ,KC_LCTL
 ),
 [_FNUM] = LAYOUT_42(
 SE_GRV       ,KC_1         ,KC_2         ,KC_3         ,KC_4         ,KC_5                       ,KC_6         ,KC_7         ,KC_8         ,KC_9         ,KC_0         ,SE_AA        ,
@@ -53,15 +60,15 @@ _______      ,XXXXXXX      ,XXXXXXX      ,SE_LBRC      ,SE_RBRC      ,XXXXXXX   
                                           _______      ,ADJUST       ,_______                    ,_______      ,_______      ,_______
 ),
 [_ADJUST] = LAYOUT_42(
-RESET        ,_______      ,_______      ,_______      ,_______      ,_______                    ,_______      ,_______      ,_______      ,_______      ,_______      ,KC_SYSTEM_SLEEP,
-KC__DEBUG    ,_______      ,_______      ,_______      ,_______      ,_______                    ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,
-_______      ,_______      ,_______      ,MUTE         ,VOL_DOWN     ,VOL_UP                     ,_______      ,_______      ,_______      ,_______      ,_______      ,_______      ,
+RESET        ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX                    ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,_______      ,
+KC__DEBUG    ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX                    ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,_______      ,
+_______      ,XXXXXXX      ,XXXXXXX      ,MUTE         ,VOL_DOWN     ,VOL_UP                     ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,_______      ,
                                           _______      ,_______      ,_______                    ,_______      ,_______      ,_______
 ),
 [_NAV] = LAYOUT_42(
-_______      ,_______      ,_______      ,_______      ,_______      ,_______                    ,_______      ,C(G(KC_LEFT)),KC_UP        ,C(G(KC_RGHT)),_______      ,KC_DELETE    ,
-CTL_TAB      ,KC_LSFT      ,KC_LCTL      ,KC_LALT      ,KC_LGUI      ,_______                    ,_______      ,KC_LEFT      ,KC_DOWN      ,KC_RIGHT     ,_______      ,_______      ,
-_______      ,_______      ,_______      ,_______      ,_______      ,CTL_TAB                    ,_______      ,G(KC_0)      ,G(S(KC_Y))   ,A(G(KC_0))   ,_______      ,_______      ,
+BASE_ON      ,NAV_ON       ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX                    ,XXXXXXX      ,C(G(KC_LEFT)),KC_UP        ,C(G(KC_RGHT)),XXXXXXX      ,KC_DELETE    ,
+_______      ,KC_LSFT      ,KC_LCTL      ,KC_LALT      ,KC_LGUI      ,XXXXXXX                    ,XXXXXXX      ,KC_LEFT      ,KC_DOWN      ,KC_RIGHT     ,XXXXXXX      ,_______      ,
+_______      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,CTL_TAB                    ,XXXXXXX      ,G(KC_0)      ,G(S(KC_Y))   ,A(G(KC_0))   ,XXXXXXX      ,_______      ,
                                           _______      ,_______      ,_______                    ,_______      ,_______      ,_______
 ),
 };
