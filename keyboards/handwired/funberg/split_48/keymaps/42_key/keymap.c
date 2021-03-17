@@ -64,13 +64,6 @@ CTL_TAB      ,KC_LSFT      ,KC_LCTL      ,KC_LALT      ,KC_LGUI      ,_______   
 _______      ,_______      ,_______      ,_______      ,_______      ,CTL_TAB                    ,_______      ,G(KC_0)      ,G(S(KC_Y))   ,A(G(KC_0))   ,_______      ,_______      ,
                                           _______      ,_______      ,_______                    ,_______      ,_______      ,_______
 ),
-
-// [_BASE] = LAYOUT(
-// XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX                                    ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX,
-// XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX                                    ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX,
-// XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX                                    ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX,
-//            XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX              ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX   ,XXXXXXX
-// )
 };
 
 // Make BASE layer special characters behave like the US-layout one instead of swedish ones
