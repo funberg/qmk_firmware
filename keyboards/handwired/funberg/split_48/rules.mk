@@ -27,6 +27,7 @@ UNICODE_ENABLE          = yes # Unicode
 SLEEP_LED_ENABLE        = no
 API_SYSEX_ENABLE        = no
 RGBLIGHT_ENABLE         = no
+TAP_DANCE_ENABLE		= yes
 
 # project specific files
 SRC = twimaster.c \

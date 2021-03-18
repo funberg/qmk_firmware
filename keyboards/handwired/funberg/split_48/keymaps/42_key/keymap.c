@@ -4,6 +4,35 @@
 
 #define RETRO_TAPPING
 
+// Tap Dance keycodes
+enum td_keycodes {
+    ALT_LP // Our example key: `LALT` when held, `(` when tapped. Add additional keycodes for each tapdance.
+};
+
+// Define a type containing as many tapdance states as you need
+typedef enum {
+    INACTIVE = 0,
+    SINGLE_TAP,
+    SINGLE_HOLD,
+    DOUBLE_TAP
+} td_state_t;
+
+// Create a global instance of the tapdance state type
+static td_state_t td_state;
+
+// Declare your tapdance functions:
+
+// Function associated with all tap dances
+uint8_t cur_dance(qk_tap_dance_state_t *state);
+
+// Functions associated with individual tap dances
+void ql_finished(qk_tap_dance_state_t *state, void *user_data);
+void ql_reset(qk_tap_dance_state_t *state, void *user_data);
+
+// Define `ACTION_TAP_DANCE_FN_ADVANCED()` for each tapdance keycode, passing in `finished` and `reset` functions
+qk_tap_dance_action_t tap_dance_actions[] = {
+    [ALT_LP] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, ql_finished, ql_reset)
+};
 
 enum custom_keycodes {
     KC__SCLN= SAFE_RANGE,
@@ -45,7 +74,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 KC_ESC       ,KC_Q         ,KC_W         ,KC_E         ,KC_R         ,KC_T                       ,KC_Y         ,KC_U         ,KC_I         ,KC_O         ,KC_P         ,KC_BSPC      ,
 KC_TAB       ,KC_A         ,KC_S         ,KC_D         ,KC_F         ,KC_G                       ,KC_H         ,KC_J         ,KC_K         ,KC_L         ,KC__SCLN     ,KC__QUOT     ,
 KC_LSFT      ,KC_Z         ,KC_X         ,KC_C         ,KC_V         ,KC_B                       ,KC_N         ,KC_M         ,KC__COMM     ,KC__DOT      ,KC__SLSH     ,KC_ENT       ,
-                                          NAV          ,FNUM         ,SPC_CMD                    ,NAV_SPC      ,CODE         ,KC_LCTL
+                                          NAV          ,FNUM         ,SPC_CMD                    ,TD(ALT_LP)   ,CODE         ,KC_LCTL
 ),
 [_FNUM] = LAYOUT_42(
 SE_GRV       ,KC_1         ,KC_2         ,KC_3         ,KC_4         ,KC_5                       ,KC_6         ,KC_7         ,KC_8         ,KC_9         ,KC_0         ,SE_AA        ,
@@ -72,6 +101,48 @@ _______      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,CTL_TAB   
                                           _______      ,_______      ,_______                    ,_______      ,_______      ,_______
 ),
 };
+
+// Determine the current tap dance state
+uint8_t cur_dance(qk_tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (!state->pressed) return SINGLE_TAP;
+        else return SINGLE_HOLD;
+    } else if (state->count == 2) return DOUBLE_TAP;
+    else return INACTIVE;
+}
+
+// Functions that control what our tap dance key does
+void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
+    td_state = cur_dance(state);
+    switch (td_state) {
+        case SINGLE_TAP:
+            tap_code(KC_QUOT);
+            break;
+        case SINGLE_HOLD:
+            layer_on(_NAV);
+            break;
+        case DOUBLE_TAP:
+            // Check to see if the layer is already set
+            if (layer_state_is(_NAV)) {
+                // If already set, then switch it off
+                layer_off(_NAV);
+            } else {
+                // If not already set, then switch the layer on
+                layer_on(_NAV);
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
+    // If the key was held down and now is released then switch off the layer
+    if (td_state == SINGLE_HOLD) {
+        layer_off(_NAV);
+    }
+    td_state = INACTIVE;
+}
 
 // Make BASE layer special characters behave like the US-layout one instead of swedish ones
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
