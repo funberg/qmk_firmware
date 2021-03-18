@@ -14,20 +14,10 @@ BOOTLOADER = caterina
 # Build Options
 #   comment out to disable the options.
 #
-BOOTMAGIC_ENABLE        = no  # Virtual DIP switch configuration(+1000)
-MIDI_ENABLE             = no  # MIDI support (+2400 to 4200)
-POINTING_DEVICE_ENABLE  = no
-MOUSEKEY_ENABLE         = no  # Mouse keys(+4700)
 EXTRAKEY_ENABLE         = yes # Audio control and System control(+450)
 CONSOLE_ENABLE          = yes  # Console for debug(+8000)
-COMMAND_ENABLE          = no  # Commands for debug and configuration
 CUSTOM_MATRIX           = yes # Custom matrix file for the Dactyl
-NKRO_ENABLE             = no # USB Nkey Rollover
 UNICODE_ENABLE          = yes # Unicode
-SLEEP_LED_ENABLE        = no
-API_SYSEX_ENABLE        = no
-RGBLIGHT_ENABLE         = no
-TAP_DANCE_ENABLE		= yes
 
 # project specific files
 SRC = twimaster.c \
