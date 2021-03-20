@@ -4,6 +4,14 @@
 
 #define RETRO_TAPPING
 
+enum tap_dance_codes {
+    C_CPY,
+    V_PST,
+    X_CUUT,
+    Z_UNDO,
+    S_SAV
+};
+
 enum custom_keycodes {
     KC__SCLN= SAFE_RANGE,
     KC__QUOT,
@@ -42,8 +50,8 @@ enum planck_layers {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_BASE] = LAYOUT_42(
 KC_ESC       ,KC_Q         ,KC_W         ,KC_E         ,KC_R         ,KC_T                       ,KC_Y         ,KC_U         ,KC_I         ,KC_O         ,KC_P         ,KC_BSPC      ,
-KC_TAB       ,KC_A         ,KC_S         ,KC_D         ,KC_F         ,KC_G                       ,KC_H         ,KC_J         ,KC_K         ,KC_L         ,KC__SCLN     ,KC__QUOT     ,
-KC_LSFT      ,KC_Z         ,KC_X         ,KC_C         ,KC_V         ,KC_B                       ,KC_N         ,KC_M         ,KC__COMM     ,KC__DOT      ,KC__SLSH     ,KC_ENT       ,
+KC_TAB       ,KC_A         ,TD(S_SAV)    ,KC_D         ,KC_F         ,KC_G                       ,KC_H         ,KC_J         ,KC_K         ,KC_L         ,KC__SCLN     ,KC__QUOT     ,
+KC_LSFT      ,TD(Z_UNDO)   ,TD(X_CUUT)   ,TD(C_CPY)    ,TD(V_PST)    ,KC_B                       ,KC_N         ,KC_M         ,KC__COMM     ,KC__DOT      ,KC__SLSH     ,KC_ENT       ,
                                           NAV          ,FNUM         ,SPC_CMD                    ,NAV_SPC      ,CODE         ,KC_LCTL
 ),
 [_FNUM] = LAYOUT_42(
@@ -70,6 +78,53 @@ _______      ,KC_LSFT      ,KC_LCTL      ,KC_LALT      ,KC_LGUI      ,XXXXXXX   
 _______      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,CTL_TAB                    ,XXXXXXX      ,G(KC_0)      ,G(S(KC_Y))   ,A(G(KC_0))   ,XXXXXXX      ,_______      ,
                                           _______      ,_______      ,_______                    ,_______      ,_______      ,_______
 ),
+};
+
+// Tap dance macro for tap = KC, hold = CMD+KC
+typedef struct {
+uint16_t keycode;
+} my_tap_hold_t;
+
+#    define MY_TAP_HOLD(kc) \
+        { .fn = {my_tap_hold_on_each_tap, my_tap_hold_finished, my_tap_hold_reset}, \
+        .user_data = (void *)&((my_tap_hold_t){kc}) }
+
+void my_tap_hold_on_each_tap(qk_tap_dance_state_t *state, void *user_data) {
+    my_tap_hold_t *user = (my_tap_hold_t *)user_data;
+    if(state->count == 2) {
+        tap_code16(user->keycode);
+        tap_code16(user->keycode);
+    }
+    if(state->count > 2) {
+        tap_code16(user->keycode);
+    }
+}
+
+void my_tap_hold_finished(qk_tap_dance_state_t *state, void *user_data) {
+    my_tap_hold_t *user = (my_tap_hold_t *)user_data;
+
+    if (state->count == 1) {
+        if(state->interrupted || !state->pressed)
+          register_code16(user->keycode);
+        else
+          tap_code16(G(user->keycode));
+    }
+}
+
+void my_tap_hold_reset(qk_tap_dance_state_t *state, void *user_data) {
+    my_tap_hold_t *user = (my_tap_hold_t *)user_data;
+
+    if (state->count == 1 && (state->interrupted || !state->pressed)) {
+        unregister_code16(user->keycode);
+    }
+}
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+    [C_CPY] = MY_TAP_HOLD(KC_C),
+    [V_PST] = MY_TAP_HOLD(KC_V),
+    [X_CUUT] = MY_TAP_HOLD(KC_X),
+    [Z_UNDO] = MY_TAP_HOLD(KC_Z),
+    [S_SAV] = MY_TAP_HOLD(KC_S),
 };
 
 // Make BASE layer special characters behave like the US-layout one instead of swedish ones

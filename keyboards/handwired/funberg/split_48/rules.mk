@@ -18,6 +18,7 @@ EXTRAKEY_ENABLE         = yes # Audio control and System control(+450)
 CONSOLE_ENABLE          = yes  # Console for debug(+8000)
 CUSTOM_MATRIX           = yes # Custom matrix file for the Dactyl
 UNICODE_ENABLE          = yes # Unicode
+TAP_DANCE_ENABLE        = yes
 
 # project specific files
 SRC = twimaster.c \
