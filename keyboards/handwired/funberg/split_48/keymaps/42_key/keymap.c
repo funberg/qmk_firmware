@@ -9,7 +9,8 @@ enum tap_dance_codes {
     V_PST,
     X_CUUT,
     Z_UNDO,
-    S_SAV
+    S_SAV,
+    SPC_NAV
 };
 
 enum custom_keycodes {
@@ -52,7 +53,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 KC_ESC       ,KC_Q         ,KC_W         ,KC_E         ,KC_R         ,KC_T                       ,KC_Y         ,KC_U         ,KC_I         ,KC_O         ,KC_P         ,KC_BSPC      ,
 KC_TAB       ,KC_A         ,TD(S_SAV)    ,KC_D         ,KC_F         ,KC_G                       ,KC_H         ,KC_J         ,KC_K         ,KC_L         ,KC__SCLN     ,KC__QUOT     ,
 KC_LSFT      ,TD(Z_UNDO)   ,TD(X_CUUT)   ,TD(C_CPY)    ,TD(V_PST)    ,KC_B                       ,KC_N         ,KC_M         ,KC__COMM     ,KC__DOT      ,KC__SLSH     ,KC_ENT       ,
-                                          NAV          ,FNUM         ,SPC_CMD                    ,NAV_SPC      ,CODE         ,KC_LCTL
+                                          NAV          ,FNUM         ,SPC_CMD                    ,TD(SPC_NAV)  ,CODE         ,KC_LCTL
 ),
 [_FNUM] = LAYOUT_42(
 SE_GRV       ,KC_1         ,KC_2         ,KC_3         ,KC_4         ,KC_5                       ,KC_6         ,KC_7         ,KC_8         ,KC_9         ,KC_0         ,SE_AA        ,
@@ -79,6 +80,29 @@ _______      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,CTL_TAB   
                                           _______      ,_______      ,_______                    ,_______      ,_______      ,_______
 ),
 };
+
+
+// Helper tap dance function
+enum {
+    SINGLE_TAP = 1,
+    SINGLE_HOLD,
+    DOUBLE_TAP,
+    DOUBLE_HOLD,
+    DOUBLE_SINGLE_TAP,
+    MORE_TAPS
+};
+
+uint8_t my_tap_step(qk_tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (state->interrupted || !state->pressed) return SINGLE_TAP;
+        else return SINGLE_HOLD;
+    } else if (state->count == 2) {
+        if (state->interrupted) return DOUBLE_SINGLE_TAP;
+        else if (state->pressed) return DOUBLE_HOLD;
+        else return DOUBLE_TAP;
+    }
+    return MORE_TAPS;
+}
 
 // Tap dance macro for tap = KC, hold = CMD+KC
 typedef struct {
@@ -119,12 +143,59 @@ void my_tap_hold_reset(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
+// Tap dance macro for tap = KC, hold = momentary layer switch, double hold = toggle layer
+typedef struct {
+uint16_t keycode;
+uint8_t layer;
+int8_t step;
+} my_tap_layer_toggle_t;
+
+#    define MY_TAP_LAYER_TOGGLE(kc, layer) \
+        { .fn = {my_tap_layer_toggle_on_each_tap, my_tap_layer_toggle_finished, my_tap_layer_toggle_reset}, \
+        .user_data = (void *)&((my_tap_layer_toggle_t){kc, layer, 0}) }
+
+void my_tap_layer_toggle_on_each_tap(qk_tap_dance_state_t *state, void *user_data) {
+    my_tap_layer_toggle_t *user = (my_tap_layer_toggle_t *)user_data;
+    if(state->count == 3) {
+        tap_code16(user->keycode);
+        tap_code16(user->keycode);
+        tap_code16(user->keycode);
+    }
+    if(state->count > 3) {
+        tap_code16(user->keycode);
+    }
+}
+
+void my_tap_layer_toggle_finished(qk_tap_dance_state_t *state, void *user_data) {
+    my_tap_layer_toggle_t *user = (my_tap_layer_toggle_t *)user_data;
+    user->step = my_tap_step(state);
+
+    switch (user->step) {
+        case SINGLE_TAP: register_code16(user->keycode); break;
+        case SINGLE_HOLD:
+        case DOUBLE_HOLD: layer_invert(user->layer); break;
+        case DOUBLE_SINGLE_TAP: tap_code16(user->keycode); register_code16(user->keycode);
+    }
+}
+
+void my_tap_layer_toggle_reset(qk_tap_dance_state_t *state, void *user_data) {
+    my_tap_layer_toggle_t *user = (my_tap_layer_toggle_t *)user_data;
+    switch (user->step) {
+        case SINGLE_TAP: unregister_code16(user->keycode); break;
+        case SINGLE_HOLD: layer_invert(user->layer); break;
+        case DOUBLE_SINGLE_TAP: unregister_code16(user->keycode); break;
+    }
+    user->step = 0;
+}
+
+
 qk_tap_dance_action_t tap_dance_actions[] = {
     [C_CPY] = MY_TAP_HOLD(KC_C),
     [V_PST] = MY_TAP_HOLD(KC_V),
     [X_CUUT] = MY_TAP_HOLD(KC_X),
     [Z_UNDO] = MY_TAP_HOLD(KC_Z),
     [S_SAV] = MY_TAP_HOLD(KC_S),
+    [SPC_NAV] = MY_TAP_LAYER_TOGGLE(KC_SPC, _NAV)
 };
 
 // Make BASE layer special characters behave like the US-layout one instead of swedish ones
