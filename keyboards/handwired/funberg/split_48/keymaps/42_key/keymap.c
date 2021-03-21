@@ -125,7 +125,7 @@ void my_tap_hold_on_each_tap(qk_tap_dance_state_t *state, void *user_data) {
         tap_code16(user->keycode);
     }
 }
-ccccsaxxvvcccccccccccccccccccccccccccccccc
+
 void my_tap_hold_finished(qk_tap_dance_state_t *state, void *user_data) {
     my_tap_hold_t *user = (my_tap_hold_t *)user_data;
     user->step = my_tap_step(state);
