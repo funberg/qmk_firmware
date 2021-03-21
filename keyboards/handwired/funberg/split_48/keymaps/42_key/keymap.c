@@ -194,7 +194,6 @@ void my_tap_layer_toggle_on_each_tap(qk_tap_dance_state_t *state, void *user_dat
 void my_tap_layer_toggle_finished(qk_tap_dance_state_t *state, void *user_data) {
     my_tap_layer_toggle_t *user = (my_tap_layer_toggle_t *)user_data;
     user->step = my_tap_step(state);
-
     switch (user->step) {
         case SINGLE_TAP: register_code16(user->keycode); break;
         case SINGLE_HOLD:
@@ -207,12 +206,16 @@ void my_tap_layer_toggle_reset(qk_tap_dance_state_t *state, void *user_data) {
     my_tap_layer_toggle_t *user = (my_tap_layer_toggle_t *)user_data;
     switch (user->step) {
         case SINGLE_TAP: unregister_code16(user->keycode); break;
-        case SINGLE_HOLD: layer_invert(user->layer); break;
+        case SINGLE_HOLD:
+            layer_invert(user->layer);
+            if(key_in_prev_layer == 1) {
+                 tap_code(user->keycode);
+            }
+            break;
         case DOUBLE_SINGLE_TAP: unregister_code16(user->keycode); break;
     }
     user->step = 0;
 }
-
 
 qk_tap_dance_action_t tap_dance_actions[] = {
     [C_CPY] = MY_TAP_HOLD(KC_C),
