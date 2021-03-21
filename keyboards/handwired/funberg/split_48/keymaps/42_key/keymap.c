@@ -35,7 +35,7 @@ enum planck_layers {
 #define CODE MO(_CODE)
 #define FNUM MO(_FNUM)
 #define ADJUST MO(_ADJUST)
-#define ADJUST0 LT(_ADJUST, KC_0)
+#define CODE0 LT(_CODE, KC_0)
 #define NAV MO(_NAV)
 #define SPC_CMD MT(MOD_LGUI, KC_SPC)
 #define NAV_SPC LT(_NAV, KC_SPC)
@@ -61,13 +61,13 @@ KC_LSFT      ,TD(Z_UNDO)   ,TD(X_CUUT)   ,TD(C_CPY)    ,TD(V_PST)    ,KC_B      
 SE_GRV       ,KC_1         ,KC_2         ,KC_3         ,KC_4         ,KC_5                       ,KC_6         ,KC_7         ,KC_8         ,KC_9         ,KC_0         ,SE_AA        ,
 _______      ,KC_F1        ,KC_F2        ,KC_F3        ,KC_F4        ,KC_F5                      ,XXXXXXX      ,KC_4         ,KC_5         ,KC_6         ,SE_OSLH      ,SE_ADIA      ,
 _______      ,KC_F6        ,KC_F7        ,KC_F8        ,KC_F9        ,KC_F10                     ,XXXXXXX      ,KC_1         ,KC_2         ,KC_3         ,XXXXXXX      ,_______      ,
-                                          _______      ,_______      ,_______                    ,_______      ,ADJUST0      ,KC_DOT
+                                          _______      ,_______      ,_______                    ,_______      ,CODE0        ,KC_DOT
 ),
 [_CODE] = LAYOUT_42(
 SE_TILD      ,KC_EXLM      ,SE_AT        ,KC_HASH      ,SE_DLR       ,KC_PERC                    ,SE_CIRC      ,SE_AMPR      ,SE_ASTR      ,SE_LPRN      ,SE_RPRN      ,SE_MINS      ,
 _______      ,XXXXXXX      ,XXXXXXX      ,SE_LCBR_MAC  ,SE_RCBR_MAC  ,XXXXXXX                    ,XXXXXXX      ,SE_LPRN      ,SE_RPRN      ,SE_PIPE_MAC  ,_______      ,SE_UNDS      ,
 _______      ,XXXXXXX      ,XXXXXXX      ,SE_LBRC      ,SE_RBRC      ,XXXXXXX                    ,XXXXXXX      ,SE_PLUS      ,SE_EQL       ,SE_BSLS_MAC  ,_______      ,_______      ,
-                                          _______      ,ADJUST       ,_______                    ,_______      ,_______      ,_______
+                                          _______      ,_______      ,_______                    ,_______      ,_______      ,_______
 ),
 [_ADJUST] = LAYOUT_42(
 RESET        ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX                    ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,_______      ,
@@ -311,6 +311,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 };
 
 layer_state_t layer_state_set_user(layer_state_t state) {
+    state = update_tri_layer_state(state, _CODE, _FNUM, _ADJUST);
     int layer = get_highest_layer(state);
     uprintf("layer:%d\n", layer);
     return state;
