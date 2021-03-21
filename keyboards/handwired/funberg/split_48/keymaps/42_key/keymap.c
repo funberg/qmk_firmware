@@ -10,6 +10,8 @@ enum tap_dance_codes {
     X_CUUT,
     Z_UNDO,
     S_SAV,
+    W_CLS,
+    Q_CLS,
     SPC_NAV
 };
 
@@ -50,7 +52,7 @@ enum planck_layers {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_BASE] = LAYOUT_42(
-KC_ESC       ,KC_Q         ,KC_W         ,KC_E         ,KC_R         ,KC_T                       ,KC_Y         ,KC_U         ,KC_I         ,KC_O         ,KC_P         ,KC_BSPC      ,
+KC_ESC       ,TD(Q_CLS)    ,TD(W_CLS)    ,KC_E         ,KC_R         ,KC_T                       ,KC_Y         ,KC_U         ,KC_I         ,KC_O         ,KC_P         ,KC_BSPC      ,
 KC_TAB       ,KC_A         ,TD(S_SAV)    ,KC_D         ,KC_F         ,KC_G                       ,KC_H         ,KC_J         ,KC_K         ,KC_L         ,KC__SCLN     ,KC__QUOT     ,
 KC_LSFT      ,TD(Z_UNDO)   ,TD(X_CUUT)   ,TD(C_CPY)    ,TD(V_PST)    ,KC_B                       ,KC_N         ,KC_M         ,KC__COMM     ,KC__DOT      ,KC__SLSH     ,KC_ENT       ,
                                           NAV          ,FNUM         ,SPC_CMD                    ,TD(SPC_NAV)  ,CODE         ,KC_LCTL
@@ -114,6 +116,10 @@ uint8_t step;
         { .fn = {my_tap_hold_on_each_tap, my_tap_hold_finished, my_tap_hold_reset}, \
         .user_data = (void *)&((my_tap_hold_t){kc, 0}) }
 
+#    define MY_TAP_HOLD_DBL(kc) \
+        { .fn = {my_tap_hold_on_each_tap, my_tap_hold_finished_dbl, my_tap_hold_reset}, \
+        .user_data = (void *)&((my_tap_hold_t){kc, 0}) }
+
 void my_tap_hold_on_each_tap(qk_tap_dance_state_t *state, void *user_data) {
     my_tap_hold_t *user = (my_tap_hold_t *)user_data;
     if(state->count == 3) {
@@ -132,6 +138,17 @@ void my_tap_hold_finished(qk_tap_dance_state_t *state, void *user_data) {
     switch (user->step) {
         case SINGLE_TAP: register_code16(user->keycode); break;
         case SINGLE_HOLD: tap_code16(G(user->keycode)); break;
+        case DOUBLE_TAP:
+        case DOUBLE_SINGLE_TAP: tap_code16(user->keycode); register_code16(user->keycode);
+    }
+}
+
+void my_tap_hold_finished_dbl(qk_tap_dance_state_t *state, void *user_data) {
+    my_tap_hold_t *user = (my_tap_hold_t *)user_data;
+    user->step = my_tap_step(state);
+    switch (user->step) {
+        case SINGLE_TAP: register_code16(user->keycode); break;
+        case DOUBLE_HOLD: tap_code16(G(user->keycode)); break;
         case DOUBLE_TAP:
         case DOUBLE_SINGLE_TAP: tap_code16(user->keycode); register_code16(user->keycode);
     }
@@ -199,6 +216,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [X_CUUT] = MY_TAP_HOLD(KC_X),
     [Z_UNDO] = MY_TAP_HOLD(KC_Z),
     [S_SAV] = MY_TAP_HOLD(KC_S),
+    [W_CLS] = MY_TAP_HOLD_DBL(KC_W),
+    [Q_CLS] = MY_TAP_HOLD_DBL(KC_Q),
     [SPC_NAV] = MY_TAP_LAYER_TOGGLE(KC_SPC, _NAV)
 };
 
