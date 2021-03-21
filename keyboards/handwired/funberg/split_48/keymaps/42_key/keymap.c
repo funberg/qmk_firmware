@@ -2,7 +2,7 @@
 #include "version.h"
 #include "keymap_swedish.h"
 
-#define RETRO_TAPPING
+
 
 enum tap_dance_codes {
     C_CPY,

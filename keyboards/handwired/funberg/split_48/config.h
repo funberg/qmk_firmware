@@ -54,6 +54,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Set 0 if debouncing isn't needed */
 #define DEBOUNCE 5
 
+#define RETRO_TAPPING
+
 // IO expander config
 #define I2C_ADDR        0x20
 #define I2C_ADDR_WRITE  ( (I2C_ADDR<<1) | I2C_WRITE )
