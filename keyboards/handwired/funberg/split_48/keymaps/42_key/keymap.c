@@ -94,6 +94,10 @@ enum {
     MORE_TAPS
 };
 
+// keep track of if a key is pressed after a layer switch, used for retro-tapping tap dances.
+int32_t key_in_layer = 0;
+int32_t key_in_prev_layer = 0;
+
 uint8_t my_tap_step(qk_tap_dance_state_t *state) {
     if (state->count == 1) {
         if (state->interrupted || !state->pressed) return SINGLE_TAP;
@@ -226,6 +230,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     static bool shift_held = false, _debugging = false;
     const bool primary_down = record->event.pressed && !shift_held, primary_up = !record->event.pressed && !shift_held;
     const bool shifted_down = record->event.pressed && shift_held, shifted_up = !record->event.pressed && shift_held;
+
+    key_in_layer++;
+
     switch (keycode) {
         case KC_LSFT:
         case KC_RSFT:
@@ -312,6 +319,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     state = update_tri_layer_state(state, _CODE, _FNUM, _ADJUST);
+    key_in_prev_layer = key_in_layer;
+    key_in_layer = 0;
     int layer = get_highest_layer(state);
     uprintf("layer:%d\n", layer);
     return state;
