@@ -107,40 +107,44 @@ uint8_t my_tap_step(qk_tap_dance_state_t *state) {
 // Tap dance macro for tap = KC, hold = CMD+KC
 typedef struct {
 uint16_t keycode;
+uint8_t step;
 } my_tap_hold_t;
 
 #    define MY_TAP_HOLD(kc) \
         { .fn = {my_tap_hold_on_each_tap, my_tap_hold_finished, my_tap_hold_reset}, \
-        .user_data = (void *)&((my_tap_hold_t){kc}) }
+        .user_data = (void *)&((my_tap_hold_t){kc, 0}) }
 
 void my_tap_hold_on_each_tap(qk_tap_dance_state_t *state, void *user_data) {
     my_tap_hold_t *user = (my_tap_hold_t *)user_data;
-    if(state->count == 2) {
+    if(state->count == 3) {
+        tap_code16(user->keycode);
         tap_code16(user->keycode);
         tap_code16(user->keycode);
     }
-    if(state->count > 2) {
+    if(state->count > 3) {
         tap_code16(user->keycode);
     }
 }
-
+ccccsaxxvvcccccccccccccccccccccccccccccccc
 void my_tap_hold_finished(qk_tap_dance_state_t *state, void *user_data) {
     my_tap_hold_t *user = (my_tap_hold_t *)user_data;
-
-    if (state->count == 1) {
-        if(state->interrupted || !state->pressed)
-          register_code16(user->keycode);
-        else
-          tap_code16(G(user->keycode));
+    user->step = my_tap_step(state);
+    switch (user->step) {
+        case SINGLE_TAP: register_code16(user->keycode); break;
+        case SINGLE_HOLD: tap_code16(G(user->keycode)); break;
+        case DOUBLE_TAP:
+        case DOUBLE_SINGLE_TAP: tap_code16(user->keycode); register_code16(user->keycode);
     }
 }
 
 void my_tap_hold_reset(qk_tap_dance_state_t *state, void *user_data) {
     my_tap_hold_t *user = (my_tap_hold_t *)user_data;
-
-    if (state->count == 1 && (state->interrupted || !state->pressed)) {
-        unregister_code16(user->keycode);
+    switch (user->step) {
+        case SINGLE_TAP: unregister_code16(user->keycode); break;
+        case DOUBLE_TAP:
+        case DOUBLE_SINGLE_TAP: unregister_code16(user->keycode);
     }
+    user->step = 0;
 }
 
 // Tap dance macro for tap = KC, hold = momentary layer switch, double hold = toggle layer
