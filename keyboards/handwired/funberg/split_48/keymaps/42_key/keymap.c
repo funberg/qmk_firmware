@@ -2,16 +2,15 @@
 #include "version.h"
 #include "keymap_swedish.h"
 
-
-
 enum tap_dance_codes {
-    C_CPY,
-    V_PST,
-    X_CUUT,
-    Z_UNDO,
-    S_SAV,
-    W_CLS,
-    Q_CLS,
+    C_CMD,
+    V_CMD,
+    X_CMD,
+    Z_CMD,
+    S_CMD,
+    Q_CMD,
+    W_CMD,
+    B_CMD,
     SPC_NAV
 };
 
@@ -52,9 +51,9 @@ enum planck_layers {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_BASE] = LAYOUT_42(
-KC_ESC       ,TD(Q_CLS)    ,TD(W_CLS)    ,KC_E         ,KC_R         ,KC_T                       ,KC_Y         ,KC_U         ,KC_I         ,KC_O         ,KC_P         ,KC_BSPC      ,
-KC_TAB       ,KC_A         ,TD(S_SAV)    ,KC_D         ,KC_F         ,KC_G                       ,KC_H         ,KC_J         ,KC_K         ,KC_L         ,KC__SCLN     ,KC__QUOT     ,
-KC_LSFT      ,TD(Z_UNDO)   ,TD(X_CUUT)   ,TD(C_CPY)    ,TD(V_PST)    ,KC_B                       ,KC_N         ,KC_M         ,KC__COMM     ,KC__DOT      ,KC__SLSH     ,KC_ENT       ,
+KC_ESC       ,KC_Q         ,KC_W         ,KC_E         ,KC_R         ,KC_T                       ,KC_Y         ,KC_U         ,KC_I         ,KC_O         ,KC_P         ,KC_BSPC      ,
+KC_TAB       ,KC_A         ,TD(S_CMD)    ,KC_D         ,KC_F         ,KC_G                       ,KC_H         ,KC_J         ,KC_K         ,KC_L         ,KC__SCLN     ,KC__QUOT     ,
+KC_LSFT      ,TD(Z_CMD)    ,TD(X_CMD)    ,TD(C_CMD)    ,TD(V_CMD)    ,TD(B_CMD)                  ,KC_N         ,KC_M         ,KC__COMM     ,KC__DOT      ,KC__SLSH     ,KC_ENT       ,
                                           NAV          ,FNUM         ,SPC_CMD                    ,TD(SPC_NAV)  ,CODE         ,KC_LCTL
 ),
 [_FNUM] = LAYOUT_42(
@@ -76,9 +75,9 @@ _______      ,XXXXXXX      ,XXXXXXX      ,MUTE         ,VOL_DOWN     ,VOL_UP    
                                           _______      ,_______      ,_______                    ,_______      ,_______      ,_______
 ),
 [_NAV] = LAYOUT_42(
-BASE_ON      ,NAV_ON       ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX                    ,XXXXXXX      ,C(G(KC_LEFT)),KC_UP        ,C(G(KC_RGHT)),XXXXXXX      ,KC_DELETE    ,
-_______      ,KC_LSFT      ,KC_LCTL      ,KC_LALT      ,KC_LGUI      ,XXXXXXX                    ,XXXXXXX      ,KC_LEFT      ,KC_DOWN      ,KC_RIGHT     ,XXXXXXX      ,_______      ,
-_______      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,CTL_TAB                    ,XXXXXXX      ,G(KC_0)      ,G(S(KC_Y))   ,A(G(KC_0))   ,XXXXXXX      ,_______      ,
+_______      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX                    ,XXXXXXX      ,C(G(KC_LEFT)),KC_UP        ,C(G(KC_RGHT)),XXXXXXX      ,KC_DELETE    ,
+_______      ,KC_LSFT      ,KC_LCTL      ,KC_LALT      ,KC_LGUI      ,CTL_TAB                    ,XXXXXXX      ,KC_LEFT      ,KC_DOWN      ,KC_RIGHT     ,XXXXXXX      ,_______      ,
+_______      ,_______      ,_______      ,_______      ,_______      ,_______                    ,XXXXXXX      ,G(KC_0)      ,G(S(KC_Y))   ,A(G(KC_0))   ,XXXXXXX      ,_______      ,
                                           _______      ,_______      ,_______                    ,_______      ,_______      ,_______
 ),
 };
@@ -218,13 +217,14 @@ void my_tap_layer_toggle_reset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [C_CPY] = MY_TAP_HOLD(KC_C),
-    [V_PST] = MY_TAP_HOLD(KC_V),
-    [X_CUUT] = MY_TAP_HOLD(KC_X),
-    [Z_UNDO] = MY_TAP_HOLD(KC_Z),
-    [S_SAV] = MY_TAP_HOLD(KC_S),
-    [W_CLS] = MY_TAP_HOLD_DBL(KC_W),
-    [Q_CLS] = MY_TAP_HOLD_DBL(KC_Q),
+    [C_CMD] = MY_TAP_HOLD(KC_C),
+    [V_CMD] = MY_TAP_HOLD(KC_V),
+    [X_CMD] = MY_TAP_HOLD(KC_X),
+    [Z_CMD] = MY_TAP_HOLD(KC_Z),
+    [S_CMD] = MY_TAP_HOLD(KC_S),
+    [B_CMD] = MY_TAP_HOLD(KC_B),
+    [W_CMD] = MY_TAP_HOLD_DBL(KC_W),
+    [Q_CMD] = MY_TAP_HOLD_DBL(KC_Q),
     [SPC_NAV] = MY_TAP_LAYER_TOGGLE(KC_SPC, _NAV)
 };
 
