@@ -77,7 +77,7 @@ _______      ,XXXXXXX      ,XXXXXXX      ,MUTE         ,VOL_DOWN     ,VOL_UP    
 [_NAV] = LAYOUT_42(
 _______      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX                    ,XXXXXXX      ,C(G(KC_LEFT)),KC_UP        ,C(G(KC_RGHT)),XXXXXXX      ,KC_DELETE    ,
 _______      ,KC_LSFT      ,KC_LCTL      ,KC_LALT      ,KC_LGUI      ,CTL_TAB                    ,XXXXXXX      ,KC_LEFT      ,KC_DOWN      ,KC_RIGHT     ,XXXXXXX      ,_______      ,
-_______      ,_______      ,_______      ,_______      ,_______      ,_______                    ,XXXXXXX      ,G(KC_0)      ,G(S(KC_Y))   ,A(G(KC_0))   ,XXXXXXX      ,_______      ,
+_______      ,_______      ,_______      ,_______      ,_______      ,_______                    ,C(SE_GRV)    ,G(KC_0)      ,G(S(KC_Y))   ,A(G(KC_0))   ,XXXXXXX      ,_______      ,
                                           _______      ,_______      ,_______                    ,_______      ,_______      ,_______
 ),
 };
