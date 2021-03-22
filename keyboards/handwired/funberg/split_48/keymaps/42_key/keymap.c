@@ -113,18 +113,18 @@ uint8_t my_tap_step(qk_tap_dance_state_t *state) {
 typedef struct {
 uint16_t keycode;
 uint8_t step;
-} my_tap_hold_t;
+} mytd_tap_cmd_on_hold_t;
 
-#    define MY_TAP_HOLD(kc) \
-        { .fn = {my_tap_hold_on_each_tap, my_tap_hold_finished, my_tap_hold_reset}, \
-        .user_data = (void *)&((my_tap_hold_t){kc, 0}) }
+#    define MYTD_TAP_CMD_ON_HOLD(kc) \
+        { .fn = {mytd_tap_cmd_on_hold_on_each_tap, mytd_tap_cmd_on_hold_finished, mytd_tap_cmd_on_hold_reset}, \
+        .user_data = (void *)&((mytd_tap_cmd_on_hold_t){kc, 0}) }
 
-#    define MY_TAP_HOLD_DBL(kc) \
-        { .fn = {my_tap_hold_on_each_tap, my_tap_hold_finished_dbl, my_tap_hold_reset}, \
-        .user_data = (void *)&((my_tap_hold_t){kc, 0}) }
+#    define MYTD_TAP_CMD_ON_DBL_HOLD(kc) \
+        { .fn = {mytd_tap_cmd_on_hold_on_each_tap, mytd_tap_cmd_on_hold_finished_dbl, mytd_tap_cmd_on_hold_reset}, \
+        .user_data = (void *)&((mytd_tap_cmd_on_hold_t){kc, 0}) }
 
-void my_tap_hold_on_each_tap(qk_tap_dance_state_t *state, void *user_data) {
-    my_tap_hold_t *user = (my_tap_hold_t *)user_data;
+void mytd_tap_cmd_on_hold_on_each_tap(qk_tap_dance_state_t *state, void *user_data) {
+    mytd_tap_cmd_on_hold_t *user = (mytd_tap_cmd_on_hold_t *)user_data;
     if(state->count == 3) {
         tap_code16(user->keycode);
         tap_code16(user->keycode);
@@ -135,8 +135,8 @@ void my_tap_hold_on_each_tap(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void my_tap_hold_finished(qk_tap_dance_state_t *state, void *user_data) {
-    my_tap_hold_t *user = (my_tap_hold_t *)user_data;
+void mytd_tap_cmd_on_hold_finished(qk_tap_dance_state_t *state, void *user_data) {
+    mytd_tap_cmd_on_hold_t *user = (mytd_tap_cmd_on_hold_t *)user_data;
     user->step = my_tap_step(state);
     switch (user->step) {
         case SINGLE_TAP: register_code16(user->keycode); break;
@@ -146,8 +146,8 @@ void my_tap_hold_finished(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void my_tap_hold_finished_dbl(qk_tap_dance_state_t *state, void *user_data) {
-    my_tap_hold_t *user = (my_tap_hold_t *)user_data;
+void mytd_tap_cmd_on_hold_finished_dbl(qk_tap_dance_state_t *state, void *user_data) {
+    mytd_tap_cmd_on_hold_t *user = (mytd_tap_cmd_on_hold_t *)user_data;
     user->step = my_tap_step(state);
     switch (user->step) {
         case SINGLE_TAP: register_code16(user->keycode); break;
@@ -157,8 +157,8 @@ void my_tap_hold_finished_dbl(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void my_tap_hold_reset(qk_tap_dance_state_t *state, void *user_data) {
-    my_tap_hold_t *user = (my_tap_hold_t *)user_data;
+void mytd_tap_cmd_on_hold_reset(qk_tap_dance_state_t *state, void *user_data) {
+    mytd_tap_cmd_on_hold_t *user = (mytd_tap_cmd_on_hold_t *)user_data;
     switch (user->step) {
         case SINGLE_TAP: unregister_code16(user->keycode); break;
         case DOUBLE_TAP:
@@ -217,14 +217,14 @@ void my_tap_layer_toggle_reset(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [C_CMD] = MY_TAP_HOLD(KC_C),
-    [V_CMD] = MY_TAP_HOLD(KC_V),
-    [X_CMD] = MY_TAP_HOLD(KC_X),
-    [Z_CMD] = MY_TAP_HOLD(KC_Z),
-    [S_CMD] = MY_TAP_HOLD(KC_S),
-    [B_CMD] = MY_TAP_HOLD(KC_B),
-    [W_CMD] = MY_TAP_HOLD_DBL(KC_W),
-    [Q_CMD] = MY_TAP_HOLD_DBL(KC_Q),
+    [C_CMD] = MYTD_TAP_CMD_ON_HOLD(KC_C),
+    [V_CMD] = MYTD_TAP_CMD_ON_HOLD(KC_V),
+    [X_CMD] = MYTD_TAP_CMD_ON_HOLD(KC_X),
+    [Z_CMD] = MYTD_TAP_CMD_ON_HOLD(KC_Z),
+    [S_CMD] = MYTD_TAP_CMD_ON_HOLD(KC_S),
+    [B_CMD] = MYTD_TAP_CMD_ON_HOLD(KC_B),
+    [W_CMD] = MYTD_TAP_CMD_ON_DBL_HOLD(KC_W),
+    [Q_CMD] = MYTD_TAP_CMD_ON_DBL_HOLD(KC_Q),
     [SPC_NAV] = MY_TAP_LAYER_TOGGLE(KC_SPC, _NAV)
 };
 
