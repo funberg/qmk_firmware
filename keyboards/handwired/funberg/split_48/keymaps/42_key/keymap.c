@@ -25,6 +25,7 @@ enum custom_keycodes {
 
 enum planck_layers {
     _BASE,
+    _COLE,
     _CODE,
     _FNUM,
     _ADJUST,
@@ -45,15 +46,19 @@ enum planck_layers {
 #define VOL_DOWN KC_AUDIO_VOL_DOWN
 
 #define BASE_ON DF(_BASE)
-#define NAV_ON  DF(_NAV)
-#define CODE_ON DF(_CODE)
-#define FNUM_ON DF(_FNUM)
+#define COLE_ON  DF(_COLE)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_BASE] = LAYOUT_42(
 KC_ESC       ,KC_Q         ,KC_W         ,KC_E         ,KC_R         ,KC_T                       ,KC_Y         ,KC_U         ,KC_I         ,KC_O         ,KC_P         ,KC_BSPC      ,
 KC_TAB       ,KC_A         ,TD(S_CMD)    ,KC_D         ,KC_F         ,KC_G                       ,KC_H         ,KC_J         ,KC_K         ,KC_L         ,KC__SCLN     ,KC__QUOT     ,
 KC_LSFT      ,TD(Z_CMD)    ,TD(X_CMD)    ,TD(C_CMD)    ,TD(V_CMD)    ,TD(B_CMD)                  ,KC_N         ,KC_M         ,KC__COMM     ,KC__DOT      ,KC__SLSH     ,KC_ENT       ,
+                                          NAV          ,FNUM         ,SPC_CMD                    ,TD(SPC_NAV)  ,CODE         ,KC_LCTL
+),
+[_COLE] = LAYOUT_42(
+KC_ESC       ,KC_Q         ,KC_W         ,KC_F         ,KC_P         ,KC_G                       ,KC_J         ,KC_L         ,KC_U         ,KC_Y         ,KC__SCLN     ,KC_BSPC      ,
+KC_TAB       ,KC_A         ,KC_R         ,TD(S_CMD)    ,KC_T         ,KC_D                       ,KC_H         ,KC_N         ,KC_E         ,KC_I         ,KC_O         ,KC__QUOT     ,
+KC_LSFT      ,TD(Z_CMD)    ,TD(X_CMD)    ,TD(C_CMD)    ,TD(V_CMD)    ,TD(B_CMD)                  ,KC_K         ,KC_M         ,KC__COMM     ,KC__DOT      ,KC__SLSH     ,KC_ENT       ,
                                           NAV          ,FNUM         ,SPC_CMD                    ,TD(SPC_NAV)  ,CODE         ,KC_LCTL
 ),
 [_FNUM] = LAYOUT_42(
@@ -71,7 +76,7 @@ _______      ,XXXXXXX      ,XXXXXXX      ,SE_LBRC      ,SE_RBRC      ,XXXXXXX   
 [_ADJUST] = LAYOUT_42(
 RESET        ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX                    ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,_______      ,
 KC__DEBUG    ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX                    ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,_______      ,
-_______      ,XXXXXXX      ,XXXXXXX      ,MUTE         ,VOL_DOWN     ,VOL_UP                     ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,_______      ,
+_______      ,XXXXXXX      ,XXXXXXX      ,MUTE         ,VOL_DOWN     ,VOL_UP                     ,BASE_ON      ,COLE_ON      ,XXXXXXX      ,XXXXXXX      ,XXXXXXX      ,_______      ,
                                           _______      ,_______      ,_______                    ,_______      ,_______      ,_______
 ),
 [_NAV] = LAYOUT_42(
